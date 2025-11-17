@@ -33,128 +33,179 @@ export default function Home() {
     }
   };
 
-  return (
-    <div className="min-h-screen p-8">
-      <div className="max-w-4xl mx-auto">
+return (
+  <div
+    className="min-h-screen bg-cover bg-center bg-no-repeat relative"
+    style={{ backgroundImage: "url('/background.jpg')" }}
+  >
+    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
 
-        {/* aziz */}
-        <header className="mb-8">
-          <h1 className="text-3xl font-bold">Resume ATS Analyzer — Ollama</h1>
-          <p className="text-gray-600 mt-2">আপনার সিভি আপলোড করুন এবং এটিএস স্কোর, দক্ষতা মিল এবং উন্নতির পরামর্শ পান। (Upload your resume to get ATS score, skill matches, and improvement suggestions.)</p>
-        </header>
+    <div className="relative z-10 max-w-5xl mx-auto p-8">
 
-        <section className="bg-white shadow rounded-lg p-6 mb-8">
-          <div className="flex items-center gap-4">
-            <input
-              id="resume"
-              type="file"
-              accept="application/pdf"
-              onChange={(e) => setFile(e.target.files?.[0])}
-              className="hidden"
-            />
-            <label htmlFor="resume" className="cursor-pointer px-4 py-2 bg-indigo-600 text-white rounded-md">
-              Choose PDF
-            </label>
+      {/* aziz */}
+      <header className="mb-10 text-white">
+        <h1 className="text-4xl font-bold drop-shadow-lg">Resume ATS Analyzer — Ollama</h1>
+        <p className="mt-2 text-gray-200 max-w-3xl">
+          আপনার সিভি আপলোড করুন এবং এটিএস স্কোর, দক্ষতা মিল এবং উন্নতির পরামর্শ পান।
+          (Upload your resume to get ATS score, skill matches, and improvement suggestions.)
+        </p>
+      </header>
 
-            <div className="flex-1">
-              <div className="text-sm text-gray-700">
-                {file ? <>{file.name} • {(file.size/1024/1024).toFixed(2)} MB</> : "No file selected"}
-              </div>
-            </div>
+      <section className="bg-white/15 backdrop-blur-xl border border-white/20 shadow-2xl rounded-2xl p-6 mb-10 text-white">
+        <div className="flex items-center gap-4">
 
-            <button
-              onClick={uploadResume}
-              disabled={loading}
-              className="px-4 py-2 bg-green-600 text-white rounded-md disabled:opacity-60"
-            >
-              {loading ? "Analyzing..." : "Analyze Resume"}
-            </button>
+          <input
+            id="resume"
+            type="file"
+            accept="application/pdf"
+            onChange={(e) => setFile(e.target.files?.[0])}
+            className="hidden"
+          />
+
+          <label
+            htmlFor="resume"
+            className="cursor-pointer px-5 py-2 bg-indigo-600 hover:bg-indigo-700 transition rounded-lg text-white shadow"
+          >
+            Choose PDF
+          </label>
+
+          <div className="flex-1 text-sm">
+            {file ? (
+              <span>{file.name} • {(file.size / 1024 / 1024).toFixed(2)} MB</span>
+            ) : (
+              <span className="text-gray-300">No file selected</span>
+            )}
           </div>
 
-          {err && <div className="mt-3 text-red-600">{err}</div>}
-        </section>
+          <button
+            onClick={uploadResume}
+            disabled={loading}
+            className="px-5 py-2 bg-green-600 hover:bg-green-700 transition rounded-lg shadow disabled:opacity-60"
+          >
+            {loading ? "Analyzing..." : "Analyze Resume"}
+          </button>
+        </div>
 
-        {analysis && (
-          <main className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* rasel */}
-            <div className="md:col-span-2 space-y-4">
-              <div className="bg-white p-4 rounded shadow">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h2 className="text-xl font-semibold">{analysis.primary_role || "Unknown Role"}</h2>
-                    <p className="text-sm text-gray-600 mt-1">{analysis.short_summary}</p>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-xs text-gray-500">ATS স্কোর</div>
-                    <div className="mt-1 text-3xl font-bold" style={{ color: analysis.ats_score >= 70 ? "#059669" : "#b91c1c" }}>
-                      {analysis.ats_score}%
-                    </div>
-                  </div>
-                </div>
-              </div>
+        {err && <div className="mt-3 text-red-300">{err}</div>}
+      </section>
 
-{/* monisha */}
-              <div className="bg-white p-4 rounded shadow">
-                <h3 className="font-semibold mb-2">Skills detected</h3>
-                <div className="flex flex-wrap gap-2">
-                  {(analysis.skills || []).map((s, i) => (
-                    <span key={i} className="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-sm">{s}</span>
-                  ))}
+      {analysis && (
+        <main className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+          {/* rasel */}
+          <div className="md:col-span-2 space-y-6">
+
+            <div className="bg-white/20 text-white backdrop-blur-xl p-5 rounded-xl shadow-xl border border-white/20">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h2 className="text-2xl font-semibold">{analysis.primary_role || "Unknown Role"}</h2>
+                  <p className="text-gray-200 mt-2">{analysis.short_summary}</p>
                 </div>
 
-                <div className="mt-4 grid grid-cols-2 gap-4">
-                  <div>
-                    <h4 className="font-medium text-sm">Matched Skills</h4>
-                    <div className="mt-2">
-                      {(analysis.matched_skills || []).length ? (
-                        (analysis.matched_skills || []).map((s,i) => (
-                          <div key={i} className="inline-block mr-2 mb-2 px-3 py-1 bg-green-50 text-green-700 rounded-full text-sm">{s}</div>
-                        ))
-                      ) : <div className="text-gray-500">None</div>}
-                    </div>
-                  </div>
-
-                  <div>
-                    <h4 className="font-medium text-sm">Missing Skills</h4>
-                    <div className="mt-2">
-                      {(analysis.missing_skills || []).length ? (
-                        (analysis.missing_skills || []).map((s,i) => (
-                          <div key={i} className="inline-block mr-2 mb-2 px-3 py-1 bg-red-50 text-red-700 rounded-full text-sm">{s}</div>
-                        ))
-                      ) : <div className="text-gray-500">None</div>}
-                    </div>
+                <div className="text-right">
+                  <div className="text-xs text-gray-300">ATS Score</div>
+                  <div
+                    className="mt-1 text-4xl font-bold"
+                    style={{
+                      color: analysis.ats_score >= 70 ? "#34D399" : "#F87171"
+                    }}
+                  >
+                    {analysis.ats_score}%
                   </div>
                 </div>
-              </div>
-
-              <div className="bg-white p-4 rounded shadow">
-                <h3 className="font-semibold mb-2">Improvement Suggestions</h3>
-                <ol className="list-decimal ml-5 space-y-2 text-sm">
-                  {(analysis.improvements || []).map((it, idx) => (
-                    <li key={idx}>{it}</li>
-                  ))}
-                </ol>
               </div>
             </div>
 
-{/* sakib */}
-            <aside className="space-y-4">
-              <div className="bg-white p-4 rounded shadow">
-                <h4 className="font-semibold mb-2">Quick Actions</h4>
-                <button className="w-full mb-2 px-3 py-2 bg-indigo-600 text-white rounded">Download ATS-friendly template</button>
-                <button className="w-full px-3 py-2 border rounded">Improve resume with suggestions</button>
+            {/* monisha */}
+            <div className="bg-white/20 text-white backdrop-blur-xl p-5 rounded-xl shadow-xl border border-white/20">
+              <h3 className="font-semibold text-lg mb-3">Skills Detected</h3>
+
+              <div className="flex flex-wrap gap-2">
+                {(analysis.skills || []).map((s, i) => (
+                  <span key={i} className="px-3 py-1 bg-indigo-600/40 rounded-full text-sm border border-indigo-300/40">
+                    {s}
+                  </span>
+                ))}
               </div>
 
-              <div className="bg-white p-4 rounded shadow">
-                <h4 className="font-semibold mb-2">Notes</h4>
-                <p className="text-sm text-gray-600">This analysis runs locally on your machine via Ollama. If the model fails to produce JSON, a fallback heuristic is used.</p>
+              <div className="mt-6 grid grid-cols-2 gap-4">
+                <div>
+                  <h4 className="font-medium text-sm mb-1">Matched Skills</h4>
+                  <div className="flex flex-wrap">
+                    {(analysis.matched_skills || []).length ? (
+                      analysis.matched_skills.map((s, i) => (
+                        <span
+                          key={i}
+                          className="mr-2 mb-2 px-3 py-1 bg-green-600/40 rounded-full text-sm border border-green-300/40"
+                        >
+                          {s}
+                        </span>
+                      ))
+                    ) : (
+                      <span className="text-gray-300">None</span>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="font-medium text-sm mb-1">Missing Skills</h4>
+                  <div className="flex flex-wrap">
+                    {(analysis.missing_skills || []).length ? (
+                      analysis.missing_skills.map((s, i) => (
+                        <span
+                          key={i}
+                          className="mr-2 mb-2 px-3 py-1 bg-red-600/40 rounded-full text-sm border border-red-300/40"
+                        >
+                          {s}
+                        </span>
+                      ))
+                    ) : (
+                      <span className="text-gray-300">None</span>
+                    )}
+                  </div>
+                </div>
               </div>
-            </aside>
-          </main>
-        )}
-      </div>
+            </div>
+
+            <div className="bg-white/20 text-white backdrop-blur-xl p-5 rounded-xl shadow-xl border border-white/20">
+              <h3 className="font-semibold text-lg mb-3">Improvement Suggestions</h3>
+              <ol className="list-decimal ml-5 space-y-2 text-sm text-gray-200">
+                {(analysis.improvements || []).map((item, i) => (
+                  <li key={i}>{item}</li>
+                ))}
+              </ol>
+            </div>
+          </div>
+
+          {/* sakib */}
+          <aside className="space-y-6">
+            <div className="bg-white/20 text-white backdrop-blur-xl p-5 rounded-xl shadow-xl border border-white/20">
+              <h4 className="font-semibold mb-3">Quick Actions</h4>
+
+              <button className="w-full mb-3 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 transition rounded-lg shadow">
+                Download ATS-friendly template
+              </button>
+
+              <button className="w-full px-4 py-2 bg-white/10 hover:bg-white/20 transition rounded-lg border border-white/30">
+                Improve resume with suggestions
+              </button>
+            </div>
+
+            <div className="bg-white/20 text-white backdrop-blur-xl p-5 rounded-xl shadow-xl border border-white/20">
+              <h4 className="font-semibold mb-2">Notes</h4>
+              <p className="text-sm text-gray-200">
+                This analysis runs locally on your machine via Ollama.
+                If the model fails to produce JSON, a fallback heuristic is used.
+              </p>
+            </div>
+          </aside>
+
+        </main>
+      )}
     </div>
-  );
+  </div>
+);
+
 }
 
 // improvem
